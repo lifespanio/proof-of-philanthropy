@@ -1,0 +1,9 @@
+{
+  "ROOT_IMG_URL": "https://pop.lifespan.io:10443/file/",
+  "DATA_COLLECTION": "evolving_nfts",
+  "TOKENS": "ETH,MATIC,USDC,USDT,VITA",
+  "DATA_TABLE": "items",
+  "FROM_BLOCK": "0x200828A",
+  "DONATIONS_WALLET": "0xCec4B18107d8AF27fa1395315e4c002343b6a8c2",
+  "DEFAULT_FALLBACK_RATES": {"ETH": 0.0005197, "MATIC": 1.486, "USDC": 1, "VITA": 2.86}
+}

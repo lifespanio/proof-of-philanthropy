@@ -1,0 +1,7 @@
+version: '3'
+services:
+  lifespan_update:
+    build:
+      context: .
+      dockerfile: update_task/Dockerfile
+    image: lifespan_update

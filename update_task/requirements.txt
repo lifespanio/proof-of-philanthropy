@@ -1,0 +1,15 @@
+pathlib
+certifi
+uuid
+demjson
+requests
+websocket-client
+cryptography
+PyCryptodome
+base58
+pynacl
+pytz
+paramiko
+argparse
+web3==5.24.0
+weave-py-api

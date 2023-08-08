@@ -1,0 +1,22 @@
+- run a local docker server
+
+- build image:
+  docker-compose -f lifespan_update.yml build
+  docker-compose -f lifespan_update_arm64.yml build
+
+- deploy image
+  docker tag lifespan_update gcr.io/weavechain/lifespan_update:1.0
+  docker push gcr.io/weavechain/lifespan_update:1.0
+  docker tag lifespan_update gcr.io/weavechain/lifespan_update:latest
+  docker push gcr.io/weavechain/lifespan_update:latest
+
+  docker tag lifespan_update_arm64 gcr.io/weavechain/lifespan_update:1.0-arm64
+  docker push gcr.io/weavechain/lifespan_update:1.0-arm64
+  docker tag lifespan_update_arm64 gcr.io/weavechain/lifespan_update:latest-arm64
+  docker push gcr.io/weavechain/lifespan_update:latest-arm64
+
+- test shell:
+  docker run -it lifespan_update /bin/bash
+
+- get latest
+  sudo docker pull gcr.io/weavechain/lifespan_update:latest
