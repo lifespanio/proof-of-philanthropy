@@ -78,7 +78,7 @@ def get_tier():
     return tier, description
 
 
-def parse_transfer(transfer, private_data, rates, now):
+def parse_transfer(transfer, private_data, rates, now, chain):
     total = 0
     raw_value = int(transfer['rawContract']['value'], base=16)
     decimals = int(transfer['rawContract']['decimal'], base=16)
@@ -88,14 +88,14 @@ def parse_transfer(transfer, private_data, rates, now):
     unique_id = transfer["uniqueId"]
     existing = private_data.get(unique_id)
     if existing is None:
-        rate = rates.get(asset)
+        rate = rates.get("ETH" if asset == "WETH" else asset)
         if rate is not None:
             usd_value = value / rate
             if usd_value > 0:
                 total += float(usd_value)
                 print("Transferred " + str(value) + " " + asset + " = " + str(usd_value) + " USD")
                 private_data[unique_id] = {"usd_value": usd_value, "value": value, "token": asset, "block": blockNum,
-                                           "ts": now, "from": owner}
+                                           "ts": now, "from": owner, "chain": chain}
         else:
             print("Ignored transfer for " + asset, "from", owner)
     else:
@@ -195,13 +195,13 @@ try:
                         if len(transfers) > 0:
                             for i in range(len(transfers)):
                                 transfer = transfers[i]
-                                total = total + parse_transfer(transfer, private_data, rates, now)
+                                total = total + parse_transfer(transfer, private_data, rates, now, toQuery)
 
                 print("Total transferred for ", owner, ":", total)
 
                 tier, description = get_tier()
 
-                img = ROOT_IMG_URL + tier + ".jpg"
+                img = ROOT_IMG_URL + tier + ".png"
 
                 public_data = json.loads(row["public_data"]) if row.get("public_data") is not None and len(row["public_data"]) > 0 else {}
                 old_tier = private_data.get("tier") is not None and private_data.get("tier")
