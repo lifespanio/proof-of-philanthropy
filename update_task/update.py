@@ -148,10 +148,12 @@ try:
     if reply.get("data") is not None:
         now = int(datetime.datetime.now(tz=pytz.utc).timestamp() * 1000)
 
+        toWrite = []
         print("Parsing " + str(len(reply["data"])) + " rows")
         for row in reply["data"]:
             try:
-                private_data = json.loads(row["private_data"]) if row.get("private_data") is not None and len(row["private_data"]) > 0 else {}
+                old_private_data = row["private_data"] if row.get("private_data") is not None and len(row["private_data"]) > 0 else "{}"
+                private_data = json.loads(old_private_data)
 
                 nft_id = row["nft_id"].split(":")
                 nft_addr = nft_id[2]
@@ -205,8 +207,9 @@ try:
 
                 public_data = json.loads(row["public_data"]) if row.get("public_data") is not None and len(row["public_data"]) > 0 else {}
                 old_tier = private_data.get("tier") is not None and private_data.get("tier")
+                old_tier = private_data.get("tier") is not None and private_data.get("tier")
 
-                if FORCE_UPDATE_ALL or tier != old_tier:
+                if FORCE_UPDATE_ALL or tier != old_tier or old_private_data != json.dumps(private_data):
                     print("Storing new state")
                     private_data["tier"] = tier
 
@@ -227,11 +230,9 @@ try:
                         json.dumps(public_data),
                         json.dumps(private_data)
                     ]
-                    items = [ item ]
-                    data = Records(items_table, items)
-                    print("Writing new state for item " + str(row["nft_id"]))
-                    res = nodeApi.write(session, data_collection, data, WRITE_DEFAULT).get()
-                    print(res)
+
+                    print("New state for item " + str(row["nft_id"]))
+                    toWrite.append(item)
 
                 if LOG_CONTENT:
                     uri = nftContract.functions.tokenURI(int(item_id)).call()
@@ -240,6 +241,13 @@ try:
             except:
                 print(traceback.format_exc())
                 break
+
+        if len(toWrite) > 0:
+            print("Writing " + str(len(toWrite)) + " records")
+            data = Records(items_table, toWrite)
+            res = nodeApi.write(session, data_collection, data, WriteOptions(True, 1, False, 1, 180, True, True, True)).get()
+            print(res)
+
 except:
     print(traceback.format_exc())
     output["error"] = "Error processing transactions"
