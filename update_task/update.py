@@ -207,7 +207,6 @@ try:
 
                 public_data = json.loads(row["public_data"]) if row.get("public_data") is not None and len(row["public_data"]) > 0 else {}
                 old_tier = private_data.get("tier") is not None and private_data.get("tier")
-                old_tier = private_data.get("tier") is not None and private_data.get("tier")
 
                 if FORCE_UPDATE_ALL or tier != old_tier or old_private_data != json.dumps(private_data):
                     print("Storing new state")
