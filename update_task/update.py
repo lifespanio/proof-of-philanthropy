@@ -36,6 +36,7 @@ FORCE_UPDATE_ALL = False
 
 ALCHEMY_KEY = keys["ALCHEMY_KEY"]
 CRYPTOCOMPARE_API_KEY = keys["CRYPTOCOMPARE_KEY"]
+COINGECKO_KEY = None if keys.get("COINGECKO_KEY") is None else keys["COINGECKO_KEY"]
 
 #LOCAL_CONFIG = "weave.config"
 LOCAL_CONFIG = None
@@ -43,7 +44,6 @@ LOCAL_CONFIG = None
 nodeApi, session = connect_weave_api(LOCAL_CONFIG)
 
 output = {}
-
 
 def get_rates():
     try:
@@ -57,6 +57,17 @@ def get_rates():
                 rates[sym] = DEFAULT_RATES[sym]
     except:
         rates = DEFAULT_RATES
+
+    try:
+        rates["VITA"] = DEFAULT_RATES["VITA"]
+        cgecko = "https://api.coingecko.com" if COINGECKO_KEY is None else "https://pro-api.coingecko.com"
+        vita = requests.get(cgecko + "/api/v3/simple/price?ids=vitadao&vs_currencies=usd")
+        vprice = vita.json()
+        prc = 1 / float(vprice["vitadao"]["usd"])
+        rates["VITA"] = prc
+    except:
+        pass
+
     return rates
 
 
@@ -170,10 +181,11 @@ try:
                 total = 0
 
                 for toQuery in [ "eth-mainnet", "polygon-mainnet" ]:
+                    print("Querying " + toQuery + " for " + owner)
                     tokens = get_tokens(toQuery)
 
                     categories = [ "external", "erc20" ]
-                    params = {"fromBlock": FROM_BLOCK, "toBlock": "latest", "fromAddress": owner, "toAddress": DONATIONS_WALLET, "contractAddresses": tokens, "category": categories}
+                    params = {"fromBlock": FROM_BLOCK[toQuery], "toBlock": "latest", "fromAddress": owner, "toAddress": DONATIONS_WALLET, "contractAddresses": tokens, "category": categories}
 
                     queryChain = 'https://' + toQuery + '.g.alchemy.com/v2/'
 
