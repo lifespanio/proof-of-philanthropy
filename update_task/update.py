@@ -38,6 +38,12 @@ ALCHEMY_KEY = keys["ALCHEMY_KEY"]
 CRYPTOCOMPARE_API_KEY = keys["CRYPTOCOMPARE_KEY"]
 COINGECKO_KEY = None if keys.get("COINGECKO_KEY") is None else keys["COINGECKO_KEY"]
 
+coin_mapping = {
+    'WETH': 'ETH',
+    'USDCE': 'USDC'
+}
+
+
 #LOCAL_CONFIG = "weave.config"
 LOCAL_CONFIG = None
 
@@ -99,7 +105,7 @@ def parse_transfer(transfer, private_data, rates, now, chain):
     unique_id = transfer["uniqueId"]
     existing = private_data.get(unique_id)
     if existing is None:
-        rate = rates.get("ETH" if asset == "WETH" else asset)
+        rate = rates.get(coin_mapping[asset] if coin_mapping.get(asset) is not None else asset)
         if rate is not None:
             usd_value = value / rate
             if usd_value > 0:
@@ -108,7 +114,7 @@ def parse_transfer(transfer, private_data, rates, now, chain):
                 private_data[unique_id] = {"usd_value": usd_value, "value": value, "token": asset, "block": blockNum,
                                            "ts": now, "from": owner, "chain": chain}
         else:
-            print("Ignored transfer for " + asset, "from", owner)
+            print("Ignored transfer for " + asset, "from", owner, " rate = 0")
     else:
         usd_value = existing.get("usd_value")
         if usd_value is None:
@@ -120,7 +126,7 @@ def parse_transfer(transfer, private_data, rates, now, chain):
             total += float(usd_value)
             print("Using " + str(value) + " " + asset + " = " + str(usd_value) + " USD")
         else:
-            print("Ignored transfer for " + asset, "from", owner)
+            print("Ignored transfer for " + asset, "from", owner, " usd_value = 0")
     return total
 
 
