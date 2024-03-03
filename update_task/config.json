@@ -2,8 +2,40 @@
   "ROOT_IMG_URL": "https://pop.lifespan.io:10443/file/",
   "DATA_COLLECTION": "evolving_nfts",
   "TOKENS": "ETH,MATIC,USDC,USDT,VITA",
+  "ADDRESSES": { "eth-mainnet": [
+        ["MATIC", "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0"],
+        ["USDC", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"],
+        ["USDT", "0xdAC17F958D2ee523a2206206994597C13D831ec7"],
+        ["ETH", "0x0000000000000000000000000000000000000000"],
+        ["VITA", "0x81f8f0bb1cB2A06649E51913A151F0E7Ef6FA321"]
+  ], "polygon-mainnet": [
+        ["MATIC", "0x0000000000000000000000000000000000001010"],
+        ["USDC", "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"],
+        ["USDT", "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"],
+        ["ETH", "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"]
+  ], "indexer": { 
+      "rounds": [ "*" ],
+      "projects": [ 
+        "0x1d139d7675a79305c1f3f62a4d5f13569a8d2561198fe85fb14f27981724b6d0", 
+        "0x348ddded598e98e7e389c4f02e1719fc1bc7ccecd7c6e908664191c76f9b8aea",
+        "0x0a7b78fb3704138803988fc2362301395288615049280a853544b8944cbf468e"
+      ],
+      "chains": [
+        ["424", "PGN"]
+      ]
+    }
+  },
   "DATA_TABLE": "items",
   "FROM_BLOCK": { "polygon-mainnet": "0x200828A", "eth-mainnet": "0x1100000" },
-  "DONATIONS_WALLET": "0xCec4B18107d8AF27fa1395315e4c002343b6a8c2",
-  "DEFAULT_FALLBACK_RATES": {"ETH": 0.0005197, "MATIC": 1.486, "USDC": 1, "VITA": 0.35}
+  "DONATIONS_WALLETS": [
+        "0xCec4B18107d8AF27fa1395315e4c002343b6a8c2", 
+        "0xa51E0a99B53d5B00937a2631d5865468A3543B7d", 
+        "0xb927D6cddc3E545Fc5ed3cB9d2dd9Ac52Addde17", 
+        "0xa023F8031bdC8d7a85A28033306D0961b39e2022", 
+        "0x5a882Eb704EA153B117Ab2b1797bA46a1B09Da2c", 
+        "0x8D2a84300d6ce230Ed3Fffc23DBCDf1e6C781FF0",
+        "0x8e160c8e949967d6b797cdf2a2f38f6344a5c95f"
+  ],
+  "DEFAULT_FALLBACK_RATES": {"ETH": 0.0005197, "MATIC": 1.486, "USDC": 1, "VITA": 0.35},
+  "COIN_MAPPING": {"WETH": "ETH", "USDCE": "USDC"}
 }

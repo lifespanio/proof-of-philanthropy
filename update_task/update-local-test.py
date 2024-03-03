@@ -11,7 +11,7 @@ from weaveapi.weaveh import *
 
 NFT_ABI = "PoP_abi.json"
 CONFIG = "config.json"
-KEYS_CONFIG = "/keys/keys.json"
+KEYS_CONFIG = "keys.json"
 
 with open(CONFIG, "r") as f:
     config = json.load(f)
@@ -45,8 +45,8 @@ COINGECKO_KEY = None if keys.get("COINGECKO_KEY") is None else keys["COINGECKO_K
 
 
 
-#LOCAL_CONFIG = "weave.config"
-LOCAL_CONFIG = None
+LOCAL_CONFIG = "weave.config"
+#LOCAL_CONFIG = None
 
 nodeApi, session = connect_weave_api(LOCAL_CONFIG)
 
@@ -373,8 +373,8 @@ try:
                 print(traceback.format_exc())
                 break
 
-        if len(toWrite) > 0:
-            print("Writing " + str(len(toWrite)) + " records")
+        if False and len(toWrite) > 0:
+            print("> Writing " + str(len(toWrite)) + " records")
             data = Records(items_table, toWrite)
             res = nodeApi.write(session, data_collection, data, WriteOptions(True, 1, False, 1, 180, True, True, True)).get()
             print(res)
@@ -385,4 +385,4 @@ except:
 
 print("Done", time.time())
 
-weave_task_output(nodeApi, session, output)
+#weave_task_output(nodeApi, session, output)
