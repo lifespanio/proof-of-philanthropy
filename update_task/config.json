@@ -13,6 +13,10 @@
         ["USDC", "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"],
         ["USDT", "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"],
         ["ETH", "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"]
+  ], "arb-mainnet": [
+        "ETH": "0x0000000000000000000000000000000000000000",
+        "USDT": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+        "USDC": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8"
   ], "indexer": { 
       "rounds": [ "*" ],
       "projects": [ 
@@ -26,7 +30,7 @@
     }
   },
   "DATA_TABLE": "items",
-  "FROM_BLOCK": { "polygon-mainnet": "0x200828A", "eth-mainnet": "0x1100000" },
+  "FROM_BLOCK": { "polygon-mainnet": "0x200828A", "eth-mainnet": "0x1100000", "arb-mainnet": "0x89644D3" },
   "DONATIONS_WALLETS": [
         "0xCec4B18107d8AF27fa1395315e4c002343b6a8c2", 
         "0xa51E0a99B53d5B00937a2631d5865468A3543B7d", 
