@@ -1,0 +1,55 @@
+# Copyright (C) 2024 Gramine contributors
+# SPDX-License-Identifier: BSD-3-Clause
+
+loader.entrypoint = "file:{{ gramine.libos }}"
+libos.entrypoint = "{{ entrypoint }}"
+
+loader.log_level = "{{ log_level }}"
+
+loader.env.LD_LIBRARY_PATH = "/lib:/usr/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
+loader.env.HOME = "{{ env.HOME }}"
+
+loader.env.OMP_NUM_THREADS = "2"
+
+loader.argv_src_file = "file:/app/py_args.txt"
+
+sgx.debug = false
+sgx.nonpie_binary = true
+
+sys.enable_sigterm_injection = true
+
+fs.start_dir = "/app"
+
+fs.mounts = [
+  { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
+  { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
+  { path = "/usr/{{ arch_libdir }}", uri = "file:/usr/{{ arch_libdir }}" },
+  { path = "/usr/local/lib", uri = "file:/usr/local/lib" },
+  { path = "{{ python.stdlib }}", uri = "file:{{ python.stdlib }}" },
+  { path = "{{ python.distlib }}", uri = "file:{{ python.distlib }}" },
+  { path = "{{ entrypoint }}", uri = "file:{{ entrypoint }}" },
+  { type = "tmpfs", path = "/tmp" },
+  { path = "/app/", uri = "file:/app/" },
+]
+
+sgx.enclave_size = "256M"
+sgx.max_threads = {{ '1' if env.get('EDMM', '0') == '1' else '32' }}
+sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+
+sys.enable_extra_runtime_domain_names_conf = true
+sgx.remote_attestation = "dcap"
+
+sgx.use_exinfo = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+
+sgx.trusted_files = [
+  "file:{{ gramine.libos }}",
+  "file:{{ entrypoint }}",
+  "file:{{ gramine.runtimedir() }}/",
+  "file:{{ arch_libdir }}/",
+  "file:/usr/{{ arch_libdir }}/",
+  "file:{{ python.stdlib }}/",
+  "file:{{ python.distlib }}/",
+  "file:/usr/local/lib/",
+  "file:/app/",
+  "file:/app/py_args.txt",
+]

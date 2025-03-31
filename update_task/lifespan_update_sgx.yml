@@ -2,5 +2,5 @@ services:
   lifespan_update:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.sgx
     image: lifespan_update

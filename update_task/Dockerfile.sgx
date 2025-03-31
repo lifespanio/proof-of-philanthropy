@@ -1,0 +1,36 @@
+FROM gradle:7.4-jdk17 AS builder
+
+RUN mkdir /app
+COPY ./requirements.txt /app
+
+COPY ./update.py /app
+COPY ./config.json /app
+COPY ./PoP_abi.json /app
+COPY ./run.sh /app
+
+FROM enclaive/gramine-os:latest
+
+RUN apt-get update \
+    && apt-get install -y libprotobuf-c1 openjdk-17-jre-headless python3 gcc execstack python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get install libsgx-dcap-default-qpl
+
+COPY --from=builder /app/* /app/
+
+COPY ./update.manifest.template /app/
+COPY ./entrypoint.sh /app/
+
+WORKDIR /app
+
+RUN pip3 install -r requirements.txt
+
+RUN gramine-argv-serializer "python" "/app/app.py" > py_args.txt
+
+#RUN bash -c 'gramine-argv-serializer `cat env_vars.txt` > env_vars_serialized.txt'
+
+RUN gramine-sgx-gen-private-key \
+    && gramine-manifest -Dlog_level=error -Darch_libdir=/lib/x86_64-linux-gnu -Dentrypoint=/usr/bin/python3 update.manifest.template update.manifest \
+    && gramine-sgx-sign --manifest update.manifest --output update.manifest.sgx
+
+ENTRYPOINT ["sh", "entrypoint.sh"]
